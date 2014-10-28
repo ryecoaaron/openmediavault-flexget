@@ -34,13 +34,6 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
                 fieldLabel: _("Config.yml"),
                 height: 500,
                 allowBlank: true
-            },
-            {
-                xtype: "text",
-                name: "Series",
-                fieldLabel: _("Series"),
-                height: 200,
-		rpcMethod: "getRaidInfo"
             }]
         }];
     }
