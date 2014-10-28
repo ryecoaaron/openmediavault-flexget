@@ -1,0 +1,43 @@
+#!/bin/sh
+set -e
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+SERVICE_NAME="flexget"
+SERVICE_XPATH="/config/services/${SERVICE_NAME}"
+case "$1" in
+    purge)
+        if omv_config_exists ${SERVICE_XPATH}; then
+            omv_config_delete ${SERVICE_XPATH}
+        fi
+
+	if [ -d "/etc/${SERVICE_NAME}" ]; then
+            echo "Removing /etc/${SERVICE_NAME}"
+            rm -rf /etc/${SERVICE_NAME}	
+	fi
+	
+	if [ -f "/etc/init.d/${SERVICE_NAME}" ]; then
+	    echo "Removing /etc/init.d/${SERVICE_NAME}"
+	    rm /etc/init.d/${SERVICE_NAME}
+	fi
+
+        if [ -f "/etc/default/${SERVICE_NAME}" ]; then
+	    echo "Removing /etc/default/${SERVICE_NAME}"
+	    rm /etc/default/${SERVICE_NAME}
+	fi
+
+        if [ -f "/var/log/${SERVICE_NAME}.log" ]; then
+	    echo "Removing /var/log/${SERVICE_NAME}.log"
+            rm /var/log/${SERVICE_NAME}.log
+	fi
+    ;;
+    remove)
+    ;;
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+#DEBHELPER#
+exit 0

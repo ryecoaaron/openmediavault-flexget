@@ -1,0 +1,81 @@
+#!/bin/sh
+set -e
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+RUN_AS="flexget"
+RUN_GROUP="flexget"
+SERVICE_NAME="flexget"
+
+case "$1" in
+    configure)
+        SERVICE_XPATH_NAME="flexget"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
+        # Add the default configuration
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "config" "tasks:
+  test task:
+    rss: http://mysite.com/myfeed.rss
+    series:
+      - My Favorite Show
+      - Another Good Show:
+          quality: 720p
+    download: /tmp/"
+        fi
+
+	if [ ! -d "/etc/${SERVICE_NAME}" ]; then
+            echo "Creating /etc/${SERVICE_NAME}"
+	    mkdir -p /etc/${SERVICE_NAME}
+	    touch /etc/${SERVICE_NAME}/config.yml
+	fi
+	
+	if [ ! -f "/etc/default/${SERVICE_NAME}" ]; then
+	    echo "Creating /etc/default/${SERVICE_NAME}"
+  	    cat << EOF > /etc/default/${SERVICE_NAME}
+# Configuration for /etc/init.d/flexget
+
+# User to run flexget as.
+# Daemon will not start if left empty.
+FGUSER="root"
+
+# Full path to the flexget config.yml file to use.
+# Defaults to FGUSER $HOME/.flexget/config.yml
+CONFIG="/etc/flexget/config.yml"
+
+# Path to the directory where flexget should log. Do not add trailing slash.
+# Defaults to the FGUSER $HOME/.flexget directory
+LOG="/var/log/"
+
+# Log verbosity
+# Available options : none critical error warning info verbose debug trace
+# Defaults to info
+LEVEL="info"
+
+EOF
+	fi
+
+	if [ ! -f "/etc/init.d/${SERVICE_NAME}" ]; then
+	    echo "Creating /etc/init.d/${SERVICE_NAME}"
+	    cp /root/flexgetPlugin/flexget.init /etc/init.d/${SERVICE_NAME}
+	    chmod 755 /etc/init.d/${SERVICE_NAME}
+	fi
+
+	update-rc.d ${SERVICE_NAME} defaults
+	update-rc.d ${SERVICE_NAME} disable
+
+        # Activate package triggers. These triggers are only set during the
+        # package installation.
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
+    ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+    *)
+        echo "postinst called with unknown argument" >&2
+        exit 1
+    ;;
+esac
+#DEBHELPER#
+exit 0
