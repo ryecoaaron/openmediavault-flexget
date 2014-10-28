@@ -58,7 +58,7 @@ EOF
 
 	if [ ! -f "/etc/init.d/${SERVICE_NAME}" ]; then
 	    echo "Creating /etc/init.d/${SERVICE_NAME}"
-	    cp /root/flexgetPlugin/flexget.init /etc/init.d/${SERVICE_NAME}
+	    cp flexget.init /etc/init.d/${SERVICE_NAME}
 	    chmod 755 /etc/init.d/${SERVICE_NAME}
 	fi
 
