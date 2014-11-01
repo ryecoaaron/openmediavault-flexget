@@ -25,6 +25,19 @@ case "$1" in
     download: /tmp/"
         fi
 
+	if ! getent passwd ${SERVICE_NAME} >/dev/null 2>&1; then
+            echo "Adding ${SERVICE_NAME} user..."
+            useradd --create-home --groups users --no-user-group --shell /usr/sbin/nologin ${SERVICE_NAME}
+	    insserv -d ${SERVICE_NAME}
+	else
+            echo "${SERVICE_NAME} user already exists."
+        fi
+
+        if [ -e /var/run/${SERVICE_NAME} ]; then
+            echo "Cleaning old pid file..."
+            rm -Rf /var/run/${SERVICE_NAME}
+        fi
+
 	if [ ! -d "/etc/${SERVICE_NAME}" ]; then
             echo "Creating /etc/${SERVICE_NAME}"
 	    mkdir -p /etc/${SERVICE_NAME}
@@ -42,24 +55,18 @@ FGUSER="root"
 
 # Full path to the flexget config.yml file to use.
 # Defaults to FGUSER $HOME/.flexget/config.yml
-CONFIG="/etc/flexget/config.yml"
+CONFIG=""
 
 # Path to the directory where flexget should log. Do not add trailing slash.
 # Defaults to the FGUSER $HOME/.flexget directory
-LOG="/var/log/"
+LOG=""
 
 # Log verbosity
 # Available options : none critical error warning info verbose debug trace
 # Defaults to info
-LEVEL="info"
+LEVEL=""
 
 EOF
-	fi
-
-	if [ ! -f "/etc/init.d/${SERVICE_NAME}" ]; then
-	    echo "Creating /etc/init.d/${SERVICE_NAME}"
-	    cp flexget.init /etc/init.d/${SERVICE_NAME}
-	    chmod 755 /etc/init.d/${SERVICE_NAME}
 	fi
 
 	update-rc.d ${SERVICE_NAME} defaults

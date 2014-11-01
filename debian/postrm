@@ -10,6 +10,17 @@ case "$1" in
             omv_config_delete ${SERVICE_XPATH}
         fi
 
+        if [ -f "/var/run/${SERVICE_NAME}/${SERVICE_NAME}.pid" ]; then
+            PID=$(cat /var/run/${SERVICE_NAME}/${SERVICE_NAME}.pid);
+            kill -0 $PID 2>/dev/null;
+
+            if [ $? -eq 0 ]; then
+                kill -9 $PID;
+            fi
+        fi
+	
+	userdel -r ${SERVICE_NAME}
+	
 	if [ -d "/etc/${SERVICE_NAME}" ]; then
             echo "Removing /etc/${SERVICE_NAME}"
             rm -rf /etc/${SERVICE_NAME}	

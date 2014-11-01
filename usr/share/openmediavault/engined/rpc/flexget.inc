@@ -46,16 +46,16 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 	 */
 	public function initialize()
 	{
-                $this->registerMethod("getSeriesList");
+                $this->registerMethod("getSeries");
 		$this->registerMethod("getSettings");
 		$this->registerMethod("setSettings");
 	}
-	public function getSeriesList($params, $context) {
+	public function getSeries($params, $context) {
 		// Validate the RPC caller context.
 		$this->validateMethodContext($context, array(
 				  "role" => OMV_ROLE_ADMINISTRATOR
 		  ));
-		OMVUtil::exec("flexget -c /etc/flexget/config.yml series list", $result);
+		OMVUtil::exec("flexget -c /home/flexget/.flexget/config.yml series list", $result);
 		return implode("\n", $result);
 	}
 	public function getSettings($params, $context)
