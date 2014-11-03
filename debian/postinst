@@ -51,7 +51,7 @@ case "$1" in
 
 # User to run flexget as.
 # Daemon will not start if left empty.
-FGUSER="root"
+FGUSER="flexget"
 
 # Full path to the flexget config.yml file to use.
 # Defaults to FGUSER $HOME/.flexget/config.yml
