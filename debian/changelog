@@ -1,1 +1,5 @@
+openmediavault-flexget (1.0.0) UNRELEASED; urgency=low
 
+  * Initial release.
+
+ -- root <root@localhost.localdomain>  Tue, 04 Nov 2014 10:11:19 -0300
