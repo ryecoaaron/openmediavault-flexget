@@ -2,7 +2,7 @@
 
 include ./openmediavault.mk
 
-PLUGIN_NAME=sickbeard
+PLUGIN_NAME=flexget
 
 clean:
 	dh_testdir
@@ -22,7 +22,7 @@ binary-indep: install omv_clean_scm
 	dh_testroot
 	dh_installchangelogs
 	dh_installdebconf
-	dh_installinit --name=sickbeard
+	dh_installinit --name=flexget
 	dh_lintian
 	dh_link
 	dh_compress
