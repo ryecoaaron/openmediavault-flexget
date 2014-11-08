@@ -1,4 +1,3 @@
-#/bin/bash
-
-apt-get install python-pip
-pip install flexget
+etc/init.d/*  etc/init.d
+usr/share/openmediavault/*  usr/share/openmediavault
+var/www/openmediavault/*    var/www/openmediavault
