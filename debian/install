@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+etc/init.d/*                etc/init.d
+>>>>>>> origin/master
 =======
 etc/init.d/*                etc/init.d
 >>>>>>> origin/master
