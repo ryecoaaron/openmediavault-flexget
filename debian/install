@@ -1,2 +1,6 @@
+<<<<<<< HEAD
+=======
+etc/init.d/*                etc/init.d
+>>>>>>> origin/master
 usr/share/openmediavault/*  usr/share/openmediavault
 var/www/openmediavault/*    var/www/openmediavault
