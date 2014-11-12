@@ -1,15 +1,20 @@
-Source: openmediavault-flexget
+Source: openmediavault-sickbeard
 Section: misc
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 Build-Depends: debhelper (>= 9 )
 Standards-Version: 3.9.3
 
-Package: flexget
+Package: openmediavault-sickbeard
 Architecture: all
 Depends: ${misc:Depends}, openmediavault (>= 0.6), python, python-cheetah, git
-Description: OpenMediaVault Flexget plugin
+Description: OpenMediaVault Sick Beard plugin
+ Sick Beard is a PVR for newsgroup users (with limited torrent support).
+ It watches for new episodes of your favorite shows and when they are
+ posted it downloads them, sorts and renames them, and optionally
+ generates metadata for them. It currently supports NZBs.org, NZBMatrix,
+ NZBs'R'Us, Newzbin, Womble's Index, NZB.su, TVTorrents and EZRSS and
+ retrieves show information from theTVDB.com and TVRage.com.
+ .
+ Backup your database before installing!!
 
- FlexGet is a multipurpose automation tool for content like torrents, nzbs, podcasts, comics, series, movies, etc. It can use different kinds of sources like RSS-feeds, html pages, csv files, search engines and there are even plugins for sites that do not provide any kind of useful feeds.
- There are numerous plugins that allow utilizing FlexGet in interesting ways and more are being added continuously.
- FlexGet is extremely useful in conjunction with applications which have watch directory support or provide interface for external utilities like FlexGet.

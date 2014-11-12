@@ -16,15 +16,6 @@ case "$1" in
             omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
             omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
             omv_config_add_element "${SERVICE_XPATH}" "config" "tasks:
-  test task:
-    rss: http://mysite.com/myfeed.rss
-    series:
-      - My Favorite Show
-      - Another Good Show:
-          quality: 720p
-    download: /tmp/"
-        fi
-
 	if ! getent passwd ${SERVICE_NAME} >/dev/null 2>&1; then
             echo "Adding ${SERVICE_NAME} user..."
             useradd --create-home --groups users --no-user-group --shell /usr/sbin/nologin ${SERVICE_NAME}
