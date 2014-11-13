@@ -1,12 +1,13 @@
-Package: openmediavault-flexget
-Version: 1.0
-Architecture: all
-Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Installed-Size: 23
-Depends: openmediavault (>= 0.6), python, python-pip, libsqlite3-dev, libyaml-0-2, python-yaml, python-openssl
+
+Source: openmediavault-flexget
 Section: misc
 Priority: optional
-Description: OpenMediaVault Flexget plugin
- FlexGet is a multipurpose automation tool for content like torrents, nzbs, podcasts, comics, series, movies, etc. It can use different kinds of sources like RSS-feeds, html pages, csv files, search engines and there are even plugins for sites that do not provide any kind of useful feeds.
- There are numerous plugins that allow utilizing FlexGet in interesting ways and more are being added continuously.
- FlexGet is extremely useful in conjunction with applications which have watch directory support or provide interface for external utilities like FlexGet.
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 9 )
+Standards-Version: 3.9.3
+
+Package: openmediavault-flexget
+Architecture: all
+Depends: ${misc:Depends}, openmediavault (>= 0.6), python, python-cheetah, git
+Description: OpenMediaVault Sick Beard plugin
+ Flexget is for torrents (with torrent support).
