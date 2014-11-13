@@ -16,6 +16,15 @@ case "$1" in
             omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
             omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
             omv_config_add_element "${SERVICE_XPATH}" "config" "tasks:
+  test task:
+    rss: http://mysite.com/myfeed.rss
+    series:
+      - My Favorite Show
+      - Another Good Show:
+          quality: 720p
+    download: /tmp/"
+        fi
+
 	if ! getent passwd ${SERVICE_NAME} >/dev/null 2>&1; then
             echo "Adding ${SERVICE_NAME} user..."
             useradd --create-home --groups users --no-user-group --shell /usr/sbin/nologin ${SERVICE_NAME}
@@ -34,7 +43,7 @@ case "$1" in
 	    mkdir -p /etc/${SERVICE_NAME}
 	    touch /etc/${SERVICE_NAME}/config.yml
 	fi
-	
+
 	if [ ! -f "/etc/default/${SERVICE_NAME}" ]; then
 	    echo "Creating /etc/default/${SERVICE_NAME}"
   	    cat << EOF > /etc/default/${SERVICE_NAME}
@@ -75,5 +84,11 @@ EOF
         exit 1
     ;;
 esac
-#DEBHELPER#
+# Automatically added by dh_installinit
+if [ -x "/etc/init.d/flexget" ]; then
+	update-rc.d flexget defaults >/dev/null
+	invoke-rc.d flexget start || exit $?
+fi
+# End automatically added section
+
 exit 0
