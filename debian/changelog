@@ -1,1 +1,5 @@
+openmdiavault-flexget (1.0) UNRELEASED; urgency=low
 
+  * Initial release. (Closes: #XXXXXX)
+
+ -- root <root@localhost.localdomain>  Thu, 13 Nov 2014 19:04:54 -0300

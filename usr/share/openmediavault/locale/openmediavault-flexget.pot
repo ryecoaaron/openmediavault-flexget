@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: openmediavault-sickbeard\n"
+"Project-Id-Version: openmediavault-flexget\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-17 06:49-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
