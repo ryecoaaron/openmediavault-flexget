@@ -1,9 +1,0 @@
-bc08ee7d667deedc530fa5f2ddb384d1  usr/share/doc/openmediavault-flexget/changelog.gz
-a3ae7a83288d6125917e8d427cafe6cd  usr/share/openmediavault/engined/module/flexget.inc
-650d7ca57d964667b8a0abbce80a96e9  usr/share/openmediavault/engined/rpc/flexget.inc
-661b5f32b60711db6f6630603db9aac4  usr/share/openmediavault/locale/openmediavault-flexget.pot
-64325dafcdbf58cd82320bb934ccbbf8  usr/share/openmediavault/mkconf/flexget
-ee79a4bc75ca84a765a9155933c95930  var/www/openmediavault/images/flexget.png
-52347bd305804eceec8f6a8c5dd43a58  var/www/openmediavault/images/flexget.svg
-5c60242f18dc89dfb203dad36f7db72a  var/www/openmediavault/js/omv/module/admin/service/flexget/Flexget.js
-77ebd186237665cc84d32649a7c2b595  var/www/openmediavault/js/omv/module/admin/service/flexget/Settings.js
