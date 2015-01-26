@@ -46,10 +46,12 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 	 */
 	public function initialize()
 	{
-                $this->registerMethod("getSeries");
+        $this->registerMethod("getSeries");
 		$this->registerMethod("getSettings");
 		$this->registerMethod("setSettings");
+        $this->registerMethod("doCheckSyntax");
 	}
+
 	public function getSeries($params, $context) {
 		// Validate the RPC caller context.
 		$this->validateMethodContext($context, array(
@@ -58,6 +60,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		OMVUtil::exec("flexget -c /home/flexget/.flexget/config.yml series list", $result);
 		return implode("\n", $result);
 	}
+
 	public function getSettings($params, $context)
 	{
 		// $xmlConfig is needed when reading and writing from the configuration.
@@ -89,10 +92,10 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		// boolval and intval converts strings and numbers to their boolean
 		// and integer value.
 		$object["enable"] = boolval($object["enable"]);
-		//$object["config"] = stringval($object["config"]);
 		
 		return $object;
 	}
+
 	public function setSettings($params, $context)
 	{
 		global $xmlConfig;
@@ -145,6 +148,55 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		);
 		return $object;
 	}
+
+    public function doCheckSyntax($params, $context)
+    {
+        global $xmlConfig;
+        
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "config"  : { "type" : "string" }
+            }
+        }');
+
+        // Write temporary config to check
+        $tmpFile = "/tmp/config.yml";
+
+        if (file_exists($tmpFile))
+            unlink($tmpFile);
+
+        file_put_contents($tmpFile, $params['config']);
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+        if ($pid > 0)   // Parent process.
+        {
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        // Child process.
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+            $cmd = sprintf("flexget -c %s check", $tmpFile);
+            $this->exec($cmd, $output, $bgOutputFilename);
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+
+        } catch(Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
+    }    
 }
 // Register the RPC service.
 $rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
