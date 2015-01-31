@@ -230,7 +230,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-            $cmd = sprintf("flexget -c %s runonce", $tmpFile);
+            $cmd = sprintf("flexget -c %s execute", $tmpFile);
             $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
 
