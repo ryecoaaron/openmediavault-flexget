@@ -75,6 +75,7 @@ EOF
 
         # Activate package triggers. These triggers are only set during the
         # package installation.
+        pip install flexget
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
     ;;
