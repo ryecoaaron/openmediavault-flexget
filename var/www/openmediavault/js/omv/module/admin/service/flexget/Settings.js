@@ -26,6 +26,14 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunOnceButton, me, [ me ])
+        },{
+			id      : me.getId() + "-runupgrade",
+            xtype   : "button",
+            text    : _("Upgrade Flexget"),
+            icon    : "images/check.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            scope   : me,
+            handler : Ext.Function.bind(me.onRunUpgradeButton, me, [ me ])
         });
         return items;
     },
@@ -120,7 +128,38 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+    
+    onRunUpgrade: function() {
+        var me = this;
+        var config = me.findField("config").getValue();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Running one time ..."),
+            rpcService      : "Flexget",
+            rpcMethod       : "doRunUpgrade",
+            rpcParams      : {
+                "config" : config
+            },            
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
+      
 });
 // Register a panel into the GUI.
 //
