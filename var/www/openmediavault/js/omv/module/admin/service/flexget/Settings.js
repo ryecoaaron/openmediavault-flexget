@@ -34,6 +34,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunUpgradeButton, me, [ me ])
+        
         });
         return items;
     },
@@ -130,11 +131,11 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         wnd.start();
     },
     
-    onRunUpgrade: function() {
+    onRunUpgradeButton: function() {
         var me = this;
         var config = me.findField("config").getValue();
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Running one time ..."),
+            title           : _("Upgrading Flexget..."),
             rpcService      : "Flexget",
             rpcMethod       : "doRunUpgrade",
             rpcParams      : {
