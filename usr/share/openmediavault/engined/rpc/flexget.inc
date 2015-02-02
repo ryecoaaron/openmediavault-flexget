@@ -211,7 +211,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
         );
 
         // Write temporary config to run once
-        $tmpFile = "/tmp/config.yml";
+        $configFile = "/home/flexget/.flexget/config.yml";
 
         if (file_exists($tmpFile))
             unlink($tmpFile);
@@ -232,7 +232,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-            $cmd = sprintf("flexget -c %s execute", $tmpFile);
+            $cmd = sprintf("flexget -c %s execute", $configFile);
             $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
 
@@ -273,7 +273,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-            $cmd = sprintf("/usr/bin/python /usr/bin/pip install flexget --upgrade");
+            $cmd = sprintf("pip install flexget --upgrade");
             $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
 
