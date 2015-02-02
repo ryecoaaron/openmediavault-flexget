@@ -14,7 +14,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             id      : me.getId() + "-check",
             xtype   : "button",
             text    : _("Check Syntax"),
-            icon    : "images/check.png",
+            icon    : "images/checkmark.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onCheckButton, me, [ me ])
@@ -22,7 +22,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             id      : me.getId() + "-runonce",
             xtype   : "button",
             text    : _("Run Once"),
-            icon    : "images/check.png",
+            icon    : "images/play.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunOnceButton, me, [ me ])
@@ -30,7 +30,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
 			id      : me.getId() + "-runupgrade",
             xtype   : "button",
             text    : _("Upgrade Flexget"),
-            icon    : "images/check.png",
+            icon    : "images/add.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunUpgradeButton, me, [ me ])
