@@ -1,3 +1,5 @@
+// require("js/omv/workspace/grid/Panel.js")
+
 Ext.define("OMV.module.admin.service.flexget.Settings", {
     extend: "OMV.workspace.form.Panel",
     
@@ -42,7 +44,26 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onGetVersionButton, me, [ me ])
-        
+		},{
+			id: me.getId() + "-runsingletask",
+			xtype: "triggerfield",
+			flex: 1,
+			emptyText: 'Run Single Task',
+			trigger1Cls: Ext.baseCSSPrefix + "form-clear-trigger",
+			trigger2Cls: Ext.baseCSSPrefix + "grid-page-nextr",
+			onTrigger1Click: function() {
+				// Reset the filter settings.
+				this.reset();
+				this.onTrigger2Click();
+			},
+			onTrigger2Click: function() {
+				// Get the entered text that should be searched for.
+				var pattern = this.getValue();
+				var store = me.getStore();
+				// Reset the filter setting.
+				store.clearFilter(!Ext.isEmpty(pattern));
+				// Prepare the new filter setting.
+			},
         });
         return items;
     },
@@ -73,7 +94,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
                 xtype: "textarea",
                 name: "config",
                 fieldLabel: _("Config.yml"),
-                height: 500,
+                height: 1000,
                 allowBlank: true
             }]
         }];
@@ -113,12 +134,9 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         var me = this;
         var config = me.findField("config").getValue();
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Running one time ..."),
+            title           : _("Sending execution task to the daemon"),
             rpcService      : "Flexget",
             rpcMethod       : "doRunOnce",
-            rpcParams      : {
-                "config" : config
-            },            
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
@@ -146,9 +164,6 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             title           : _("Upgrading Flexget..."),
             rpcService      : "Flexget",
             rpcMethod       : "doRunUpgrade",
-            rpcParams      : {
-                "config" : config
-            },            
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
@@ -173,12 +188,9 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         var me = this;
         var config = me.findField("config").getValue();
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Get version info..."),
+            title           : _("Flexget Version Info"),
             rpcService      : "Flexget",
             rpcMethod       : "doGetVersion",
-            rpcParams      : {
-                "config" : config
-            },            
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
@@ -198,7 +210,6 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         wnd.show();
         wnd.start();
     }
-      
 });
 // Register a panel into the GUI.
 //
