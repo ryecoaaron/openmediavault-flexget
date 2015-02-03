@@ -14,7 +14,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             id      : me.getId() + "-check",
             xtype   : "button",
             text    : _("Check Syntax"),
-            icon    : "images/check.png",
+            icon    : "images/spell-check.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onCheckButton, me, [ me ])
@@ -22,10 +22,27 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             id      : me.getId() + "-runonce",
             xtype   : "button",
             text    : _("Run Once"),
-            icon    : "images/check.png",
+            icon    : "images/play.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunOnceButton, me, [ me ])
+        },{
+			id      : me.getId() + "-runupgrade",
+            xtype   : "button",
+            text    : _("Upgrade Flexget"),
+            icon    : "images/add.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            scope   : me,
+            handler : Ext.Function.bind(me.onRunUpgradeButton, me, [ me ])
+        },{
+            id      : me.getId() + "-getinfo",
+            xtype   : "button",
+            text    : _("Version Info"),
+            icon    : "images/info.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            scope   : me,
+            handler : Ext.Function.bind(me.onGetVersionButton, me, [ me ])
+        
         });
         return items;
     },
@@ -120,7 +137,68 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+    
+    onRunUpgradeButton: function() {
+        var me = this;
+        var config = me.findField("config").getValue();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Upgrading Flexget..."),
+            rpcService      : "Flexget",
+            rpcMethod       : "doRunUpgrade",
+            rpcParams      : {
+                "config" : config
+            },            
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+    
+    onGetVersionButton: function() {
+        var me = this;
+        var config = me.findField("config").getValue();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Get version info..."),
+            rpcService      : "Flexget",
+            rpcMethod       : "doGetVersion",
+            rpcParams      : {
+                "config" : config
+            },            
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
+      
 });
 // Register a panel into the GUI.
 //
