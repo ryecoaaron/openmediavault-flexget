@@ -9,5 +9,5 @@ Standards-Version: 3.9.3
 Package: openmediavault-flexget
 Architecture: all
 Depends: ${misc:Depends}, openmediavault (>= 0.6), python, python-cheetah, git, python-pip
-Description: OpenMediaVault Sick Beard plugin
+Description: OpenMediaVault Flexget plugin
  Flexget is for torrents (with torrent support).
