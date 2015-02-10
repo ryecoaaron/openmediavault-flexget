@@ -13,7 +13,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         items.push({
             id      : me.getId() + "-check",
             xtype   : "button",
-            text    : _("Check Syntax"),
+            text    : _("Syntax"),
             icon    : "images/spell-check.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
@@ -29,7 +29,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         },{
 			id      : me.getId() + "-runupgrade",
             xtype   : "button",
-            text    : _("Upgrade Flexget"),
+            text    : _("Upgrade"),
             icon    : "images/add.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
@@ -37,7 +37,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         },{
             id      : me.getId() + "-getinfo",
             xtype   : "button",
-            text    : _("Version Info"),
+            text    : _("Info"),
             icon    : "images/info.png",
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
