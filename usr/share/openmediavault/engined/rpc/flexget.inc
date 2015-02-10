@@ -29,6 +29,11 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		return "/config/services/flexget";
 	}
 	
+    private function getTaskCache()
+    {
+        return "/var/cache/openmediavault/flexget_tasks_cache";
+    }
+	
 	/**
 	 * Get the name of the RPC service.
 	 *
@@ -53,6 +58,9 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
         $this->registerMethod("doRunOnce");
         $this->registerMethod("doRunUpgrade");
         $this->registerMethod("doGetVersion");
+        $this->registerMethod("doGetTaskList");
+        $this->registerMethod("updateTaskCache");
+        
 	}
 
 	public function getSeries($params, $context) {
@@ -322,8 +330,63 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
-    }    
- 
+    }
+    
+    public function doGetTaskList($params, $context)
+
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Get current time
+        $time = time();
+
+        // if the cache doesn't exist or is older than 1 day, download it
+        if ( !file_exists($this->getTaskCache()) or
+             ($time - filemtime($this->getTaskCache()) >= 60*60*24) )
+        {
+            $this->updateTaskCache($params, $context);
+        }
+
+        $objects = array();
+        $tasks = file($this->getTaskCache());
+
+        // Loop through our array, show HTML source as HTML source; and line numbers too.
+        foreach ($tasks as $task)
+        {
+            if (empty($task))
+                continue;
+
+            $objects[] = array(
+                "name" => $task
+            );
+        }
+
+        // Filter the result.
+        return $this->applyFilter($objects, $params['start'], $params['limit'],
+            $params['sortfield'], $params['sortdir']);
+    }
+
+
+    public function updateTaskCache($params, $context)
+
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Get tasks file from web server and put in cache file
+        file_put_contents(
+            $this->getTaskCache(),
+            file_get_contents("/home/flexget/.flexget/tasks.txt")
+        );
+    }
+
 }
 // Register the RPC service.
 $rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
