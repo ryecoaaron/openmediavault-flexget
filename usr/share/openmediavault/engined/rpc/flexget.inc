@@ -53,6 +53,8 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
         $this->registerMethod("doRunOnce");
         $this->registerMethod("doRunUpgrade");
         $this->registerMethod("doGetVersion");
+        $this->registerMethod("doGetSeriesList");
+        $this->registerMethod("doGetHistory");
 	}
 
 	public function getSeries($params, $context) {
@@ -240,7 +242,74 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
+    }
+    
+    public function doGetSeriesList($params, $context)
+    {
+        global $xmlConfig;
+        
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+        if ($pid > 0)   // Parent process.
+        {
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        // Child process.
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+            $cmd = sprintf("flexget -c /home/flexget/.flexget/config.yml series list");
+            $this->exec($cmd, $output, $bgOutputFilename);
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+
+        } catch(Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
     }    
+    
+    public function doGetHistory($params, $context)
+    {
+        global $xmlConfig;
+        
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+        if ($pid > 0)   // Parent process.
+        {
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        // Child process.
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+            $cmd = sprintf("flexget -c /home/flexget/.flexget/config.yml history");
+            $this->exec($cmd, $output, $bgOutputFilename);
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+
+        } catch(Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
+    }    
+
 
     public function doRunUpgrade($params, $context)
     {
@@ -251,13 +320,6 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             array( "role" => OMV_ROLE_ADMINISTRATOR )
         );
 
-        // Write temporary config to run once
-        $tmpFile = "/tmp/config.yml";
-
-        if (file_exists($tmpFile))
-            unlink($tmpFile);
-
-        file_put_contents($tmpFile, $params['config']);
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
@@ -291,14 +353,6 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $context,
             array( "role" => OMV_ROLE_ADMINISTRATOR )
         );
-
-        // Write temporary config to run once
-        $tmpFile = "/tmp/config.yml";
-
-        if (file_exists($tmpFile))
-            unlink($tmpFile);
-
-        file_put_contents($tmpFile, $params['config']);
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();

@@ -1,3 +1,5 @@
+// require("js/omv/workspace/window/TextArea.js")
+
 Ext.define("OMV.module.admin.service.flexget.Settings", {
     extend: "OMV.workspace.form.Panel",
     
@@ -26,6 +28,22 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope   : me,
             handler : Ext.Function.bind(me.onRunOnceButton, me, [ me ])
+        },{
+            id      : me.getId() + "-getserieslist",
+            xtype   : "button",
+            text    : _("Series List"),
+            icon    : "images/list2.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            scope   : me,
+            handler : Ext.Function.bind(me.onGetSeriesList, me, [ me ])
+        },{
+            id      : me.getId() + "-gethistory",
+            xtype   : "button",
+            text    : _("History"),
+            icon    : "images/history.png",
+            iconCls : Ext.baseCSSPrefix + "btn-icon-16x16",
+            scope   : me,
+            handler : Ext.Function.bind(me.onGetHistory, me, [ me ])
         },{
 			id      : me.getId() + "-runupgrade",
             xtype   : "button",
@@ -71,6 +89,7 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             },
             {
                 xtype: "textarea",
+                cls: "x-form-textarea-monospaced",
                 name: "config",
                 fieldLabel: _("Config.yml"),
                 height: 500,
@@ -92,6 +111,8 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
+            width           : 750,
+            cls             : "x-form-textarea-monospaced",
             listeners       : {
                 scope     : me,
                 finish    : function(wnd, response) {
@@ -138,6 +159,73 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
         wnd.show();
         wnd.start();
     },
+ 
+     onGetSeriesList: function() {
+        var me = this;
+        var config = me.findField("config").getValue();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Getting Series List ..."),
+            rpcService      : "Flexget",
+            rpcMethod       : "doGetSeriesList",
+            rpcParams      : {
+                "config" : config
+            },            
+            cls             : "x-form-textarea-monospaced",
+            height          : 450,
+            width           : 750,
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+    
+     onGetHistory: function() {
+        var me = this;
+        var config = me.findField("config").getValue();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Printing last 20 Entries ..."),
+            rpcService      : "Flexget",
+            rpcMethod       : "doGetHistory",
+            rpcParams      : {
+                "config" : config
+            },            
+            cls             : "x-form-textarea-monospaced",
+            flex            : 1,
+            height          : 450,
+            width           : 750,
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
     
     onRunUpgradeButton: function() {
         var me = this;
@@ -146,12 +234,11 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             title           : _("Upgrading Flexget..."),
             rpcService      : "Flexget",
             rpcMethod       : "doRunUpgrade",
-            rpcParams      : {
-                "config" : config
-            },            
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
+            height          : 450,
+            width           : 750,
             listeners       : {
                 scope     : me,
                 finish    : function(wnd, response) {
@@ -176,12 +263,11 @@ Ext.define("OMV.module.admin.service.flexget.Settings", {
             title           : _("Get version info..."),
             rpcService      : "Flexget",
             rpcMethod       : "doGetVersion",
-            rpcParams      : {
-                "config" : config
-            },            
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
+            height          : 150,
+            width           : 250,
             listeners       : {
                 scope     : me,
                 finish    : function(wnd, response) {
