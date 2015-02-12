@@ -6,16 +6,7 @@ set -e
 RUN_AS="flexget"
 RUN_GROUP="flexget"
 SERVICE_NAME="flexget"
-
-case "$1" in
-    configure)
-        SERVICE_XPATH_NAME="flexget"
-        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
-        # Add the default configuration
-        if ! omv_config_exists "${SERVICE_XPATH}"; then
-            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
-            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
-            omv_config_add_element "${SERVICE_XPATH}" "config" "tasks:
+CONFYML=$(cat <<EOF
 schedules:
   - tasks: '*'
     interval:
@@ -25,7 +16,7 @@ templates:
   global:
     email:
       from: 123@gmail.com
-      to: 
+      to:
         - 123@gmail.com
       smtp_host: smtp.gmail.com
       smtp_port: 587
@@ -48,7 +39,7 @@ templates:
         - '*.avi'
         - '*.rar'
         - '*.MP4'
-      reject: 
+      reject:
         - '*.zip'
         - '*.wmv'
     regexp:
@@ -71,7 +62,7 @@ templates:
       - Ray Donovan:
           quality: 720p
       - Da Vincis Demons:
-          quality: 720p   
+          quality: 720p
       - Nikita:
           begin: S03E17
       - Elementary:
@@ -193,22 +184,22 @@ templates:
       reject:
         - '[\W_]CAM[\W_]'
         - '[\W_]TS[\W_]'
-        - WEBSCR 
+        - WEBSCR
         - '[\W_]R3[\W_]'
-        - DUTCH  
+        - DUTCH
         - '[\W_]NL[\W_]'
         - R6
         - spanish
         - Spanish
-        - SWESUB  
+        - SWESUB
         - '.TPB'
         - R1
-        - FRENCH 
+        - FRENCH
         - 'Russian Audio'
-        - 'WEB-DL'   
-        - 'WEB DL'   
+        - 'WEB-DL'
+        - 'WEB DL'
         - '[Eng]BlueLady.mp4'
-        - FeCKTaRDS  
+        - FeCKTaRDS
         - iT@_CREW
         - BINGOWINGZ-UKB-RG
         - GlowGaze.Com
@@ -231,11 +222,11 @@ templates:
           quality: dvdrip+
       - imdb_score > 7.0:
           quality: bluray+ 720p+
-      - "'documentary' in genre":
+      - documentary in genre:
           set:
             path: /media/63539cb9-1f77-4590-ba39-5919f7b9169b/torrent/downloads/
             movedone: /media/63539cb9-1f77-4590-ba39-5919f7b9169b/videos/documentary/
-              
+
     content_filter:
       require:
         - '*.mkv'
@@ -262,7 +253,7 @@ tasks:
     movie_queue: add
     accept_all: yes
     seen: local
-   
+
   torlock_movies:
     priority: 92
     rss: http://www.torlock.com/movies/rss.xml
@@ -270,12 +261,12 @@ tasks:
     seen_movies: strict
     movie_queue: accept
     torrent_alive: yes
-    template: 
+    template:
       - movies
 
   speed_cd:
     priority: 8
-    rss: "http://speed.cd/get_rss.php?feed=dl&user=subzero79&cat=43,1&passkey=XXXX"
+    rss: http://speed.cd/
     imdb_lookup: yes
     seen_movies: strict
     movie_queue: accept
@@ -291,15 +282,28 @@ tasks:
 
   speedcdtv:
     priority: 10
-    rss: "http://speed.cd/get_rss.php?feed=dl&user=subzero79&cat=2,49&passkey=XXXX"
+    rss: "http://speed.cd/
     template:
       - tv
 
   torlock_tv:
     priority: 90
-    rss: "http://www.torlock.com/television/rss.xml"
+    rss: http://www.torlock.com/television/rss.xml
     template:
-      - tv"
+      - tv
+EOF
+)
+
+
+case "$1" in
+    configure)
+        SERVICE_XPATH_NAME="flexget"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
+        # Add the default configuration
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "config" "$CONFYML"
 
         fi
 
