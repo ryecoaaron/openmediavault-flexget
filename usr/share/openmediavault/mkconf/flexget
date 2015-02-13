@@ -2,14 +2,10 @@
 set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
-OMV_FLEXGET_XPATH="/config/services/flexget"
-OMV_FLEXGET_CONF="/home/flexget/.flexget/config.yml"
-#cat <<EOF > ${OMV_FLEXGET_CONF}
-#$(omv_config_get "${OMV_FLEXGET_XPATH}/config")
-#EOF
 
-xmlstarlet sel -t \
-  -v "//services/flexget/config" -n \
-  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_FLEXGET_CONF}
+FLEXGET_CONF="/etc/flexget/config.yml"
+OMV_FLEXGET_CONF="/home/flexget/.flexget/config.yml"
+
+cp -f ${FLEXGET_CONF} ${OMV_FLEXGET_CONF}
 
 exit 0

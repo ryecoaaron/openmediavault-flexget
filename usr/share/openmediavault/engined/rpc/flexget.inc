@@ -88,6 +88,14 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		// and integer value.
 		$object["enable"] = boolval($object["enable"]);
 		
+        // Get config from file and output to object to return to web interface
+        $output = array();
+        $result = "";
+
+        $cmd = "cat /etc/flexget/config.yml";
+        OMVUtil::exec($cmd, $result);
+        $object['config'] = implode("\n", $result) . "\n";
+
 		return $object;
 	}
 
@@ -118,8 +126,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 		);
 		// Update the configuration object.
 		$object = array(
-			"enable" => array_boolval($params, "enable"),
-			"config" => $params["config"],
+			"enable" => array_boolval($params, "enable")
 		);
 		
 		// Update the configuration file. If it fails it throws an exception.
@@ -130,6 +137,8 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 			);
 		}
 		
+        file_put_contents("/etc/flexget/config.yml", $params['config']);
+
 		// Notify configuration changes.
 		//
 		// This will notify event listeners such as the service module
