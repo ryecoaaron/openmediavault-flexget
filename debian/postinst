@@ -6,7 +6,8 @@ set -e
 RUN_AS="flexget"
 RUN_GROUP="flexget"
 SERVICE_NAME="flexget"
-CONFYML=$(cat <<EOF
+
+read -d '' CONFYML << EOF
 schedules:
   - tasks: '*'
     interval:
@@ -292,7 +293,6 @@ tasks:
     template:
       - tv
 EOF
-)
 
 
 case "$1" in
