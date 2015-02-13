@@ -6,6 +6,6 @@ set -e
 FLEXGET_CONF="/etc/flexget/config.yml"
 OMV_FLEXGET_CONF="/home/flexget/.flexget/config.yml"
 
-cp -f ${FLEXGET_CONF} ${OMV_FLEXGET_CONF}
+cp -f ${OMV_FLEXGET_CONF} ${FLEXGET_CONF}
 
 exit 0

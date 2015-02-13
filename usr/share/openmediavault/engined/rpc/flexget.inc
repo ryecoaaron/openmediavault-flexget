@@ -92,7 +92,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
         $output = array();
         $result = "";
 
-        $cmd = "cat /etc/flexget/config.yml";
+        $cmd = "cat /home/flexget/.flexget/config.yml";
         OMVUtil::exec($cmd, $result);
         $object['config'] = implode("\n", $result) . "\n";
 
@@ -137,7 +137,7 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
 			);
 		}
 		
-        file_put_contents("/etc/flexget/config.yml", $params['config']);
+        file_put_contents("/home/flexget/.flexget/config.yml", $params['config']);
 
 		// Notify configuration changes.
 		//
@@ -210,14 +210,6 @@ class OMVRpcServiceFlexget extends OMVRpcServiceAbstract
             $context,
             array( "role" => OMV_ROLE_ADMINISTRATOR )
         );
-
-        // Write temporary config to run once
-        $configFile = "/home/flexget/.flexget/config.yml";
-
-        if (file_exists($tmpFile))
-            unlink($tmpFile);
-
-        file_put_contents($tmpFile, $params['config']);
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();

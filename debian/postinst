@@ -7,6 +7,9 @@ RUN_AS="flexget"
 RUN_GROUP="flexget"
 SERVICE_NAME="flexget"
 
+FLEXGET_CONF="/etc/flexget/config.yml"
+OMV_FLEXGET_CONF="/home/flexget/.flexget/config.yml"
+
 case "$1" in
     configure)
         SERVICE_XPATH_NAME="flexget"
@@ -70,9 +73,15 @@ EOF
         pip install flexget
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
+
+        if [ ! -f "${OMV_FLEXGET_CONF}"]; then
+            cp -f ${FLEXGET_CONF} ${OMV_FLEXGET_CONF}
+        fi
     ;;
+
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
+    
     *)
         echo "postinst called with unknown argument" >&2
         exit 1
